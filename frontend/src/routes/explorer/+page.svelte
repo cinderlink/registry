@@ -55,22 +55,6 @@
 	Explore the Cinderlink Registry
 </Typography>
 
-{#if !$web3.connected}
-	<Panel invert classes="mb-8">
-		<div class="flex flex-row gap-2 items-center justify-between">
-			<div class="flex-1 flex flex-row gap-4 items-center justify-center">
-				<div
-					class="i-tabler-alert-triangle-filled text-yellow-400 dark-(text-yellow-100) text-3xl"
-				/>
-				<Typography el="h3" classes="text-2xl">
-					You must connect a Wallet to contribute data to the registry
-				</Typography>
-			</div>
-			<OnboardButton variant="green" />
-		</div>
-	</Panel>
-{/if}
-
 <div class="flex flex-col gap-2 items-end justify-start">
 	<Input id="registry_search" placeholder="Search" />
 	<Button variant="blue">
@@ -79,7 +63,34 @@
 	</Button>
 </div>
 
-{#if !searched}
+<LoadRegistryUser passthrough let:user let:error let:registered let:connected>
+	<Panel invert classes="mt-8">
+		<div class="flex-1 flex flex-row gap-4 items-center justify-center">
+			<div class="i-tabler-alert-triangle-filled text-yellow-400 dark-(text-yellow-100) text-3xl" />
+			{#if user}
+				<Typography el="p">
+					Connected as <strong>{user.name} ({user.did})</strong>
+				</Typography>
+			{:else if !connected}
+				<Typography el="h4" classes="text-purple-200">
+					You must connect a wallet before you can contribute to the registry
+				</Typography>
+				<OnboardButton variant="green" />
+			{:else if !registered}
+				<Typography el="h4" classes="text-purple-200">
+					You must register before you can contribute to the registry
+				</Typography>
+				<Button variant="green" href="/registry/users/register">
+					<div class="i-tabler-plus" />
+					Register
+				</Button>
+			{:else if error}
+				<Typography el="h4" classes="text-purple-200">
+					{error}
+				</Typography>
+			{/if}
+		</div>
+	</Panel>
 	<section class="flex flex-col gap-8 mt-8">
 		<Panel>
 			<Typography el="h3">Categories</Typography>
@@ -101,11 +112,9 @@
 					{/if}
 				{/await}
 			</Typography>
-			<LoadRegistryUser>
+			{#if user}
 				<Panel variant="offset">
-					<Typography el="h4" classes="text-purple-500 dark-(text-yellow-200)">
-						Create a Category
-					</Typography>
+					<Typography el="h4" classes="text-purple-200">Create a Category</Typography>
 					<form on:submit|preventDefault={createCategory} class="flex flex-row gap-2">
 						<Input
 							id="category_name"
@@ -135,25 +144,10 @@
 						</Typography>
 					{/if}
 				</Panel>
-
-				<svelte:fragment slot="unregistered">
-					<Panel variant="offset" size="sm">
-						<Typography el="h4" classes="text-purple-500 dark-(text-yellow-200) px-1">
-							You must register a user to create a category
-						</Typography>
-						<Button variant="green" href="/registry/users/register">
-							<div class="i-tabler-plus" />
-							Register
-						</Button>
-					</Panel>
-				</svelte:fragment>
-			</LoadRegistryUser>
+			{/if}
 		</Panel>
-
 		<Panel>Explore schemas</Panel>
-
 		<Panel>Explore entities</Panel>
-
 		<Panel>Explore definitions</Panel>
 	</section>
-{/if}
+</LoadRegistryUser>
