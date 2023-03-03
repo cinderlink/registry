@@ -93,7 +93,7 @@ contract EntityRegistry is PermissionedContract {
         view
         returns (uint256[] memory)
     {
-        uint256[] memory ids = new uint256[](_limit);
+        uint256[] memory ids = new uint256[](0);
         uint256 _counter = 0;
         for (uint256 i = _offset; i < entityTypeIds[_typeId].length; i++) {
             if (exists(entityTypeIds[_typeId][i])) {
