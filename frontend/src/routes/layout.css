@@ -1,0 +1,35 @@
+body {
+    @apply font-sans;
+}
+h1 {
+    @apply text-4xl mt-4 mb-3 text-purple-600 dark-(text-blue-200);
+}
+h2 {
+    @apply text-3xl mt-6 mb-3 text-purple-400 dark-(text-purple-200);
+}
+h3 {
+    @apply text-2xl mt-4 mb-2;
+}
+h4 {
+    @apply text-xl mt-2 mb-1;
+}
+h5 {
+    @apply text-lg;
+}
+h6 {
+    @apply text-base;
+}
+p {
+    @apply text-base my-2;
+}
+caption {
+    @apply text-sm;
+}
+strong {
+    @apply font-bold;
+}
+
+a:not(.button) {
+    @apply text-purple-600 dark-(text-blue-200);
+    @apply hover-(text-purple-800 dark-(text-blue-300) underline);
+}

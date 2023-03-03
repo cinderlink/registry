@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**"],
+      "outputs": ["dist/**", ".svelte-kit/**", "package/**"]
+    },
+    "watch": {
+      "inputs": ["src/**"],
+      "outputs": ["dist/**", ".svelte-kit/**", "package/**"],
+      "persistent": true
+    },
+    "dev": {
+      "inputs": ["src/**"],
+      "outputs": ["dist/**"],
+      "persistent": true
+    },
+    "lint": {}
+  }
+}

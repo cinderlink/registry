@@ -1,0 +1,20 @@
+# Compiler files
+cache/
+out/
+export/*
+lib/
+
+# Ignores development broadcast logs
+!/broadcast
+/broadcast/*
+/docs/*
+esm/
+typescript/
+
+# Dotenv file
+.env
+
+.DS_Store
+
+node_modules/
+.turbo/
