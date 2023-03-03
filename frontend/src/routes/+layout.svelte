@@ -39,6 +39,16 @@
 						{/each}
 					</ul>
 				</Drawer>
+				<Drawer label="Attestation">
+					<ui>
+						<li>
+							<a href="/attestation">Attestation</a>
+						</li>
+						<li>
+							<a href="/attestation-svelte">Attestation - Svelte</a>
+						</li>
+					</ui>
+				</Drawer>
 
 				<Drawer label="Libraries">
 					<ul>
