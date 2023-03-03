@@ -15,6 +15,10 @@
 			</div>
 			<a id="brand" href="/">@candor/registry</a>
 			<nav class="flex-1 flex flex-col gap-2">
+				<Button variant="green" href="/explorer">
+					<div class="i-tabler-compass" />
+					Explorer
+				</Button>
 				<Drawer label="Guides">
 					<ul>
 						<li>

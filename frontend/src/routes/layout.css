@@ -1,6 +1,11 @@
+@import url('https://use.typekit.net/crk7mse.css');
+html,
 body {
-    @apply font-sans;
+	@apply w-full h-full overflow-hidden font-sans;
+	font-family: 'proxima-nova', sans-serif;
+	font-size: 18px;
 }
+
 h1 {
     @apply text-4xl mt-4 mb-3 text-purple-600 dark-(text-blue-200);
 }
