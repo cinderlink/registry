@@ -90,11 +90,11 @@ contract UserRegistry {
         return users[userAddresses[msg.sender]];
     }
 
-    function getdid(uint256 _id) public view returns (string memory) {
+    function getDid(uint256 _id) public view returns (string memory) {
         return users[_id].did;
     }
 
-    function getdid(string memory _name) public view returns (string memory) {
+    function getDid(string memory _name) public view returns (string memory) {
         string memory slug = CandorStrings.slugify(_name);
         return users[userIds[slug]].did;
     }
@@ -115,7 +115,7 @@ contract UserRegistry {
         users[_id].name = slug;
     }
 
-    function updatedid(uint256 _id, string memory _did) public {
+    function updateDid(uint256 _id, string memory _did) public {
         require(
             users[_id].owner == msg.sender || msg.sender == owner, "Only the owner of a permission can update the did"
         );

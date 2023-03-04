@@ -14,6 +14,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@candor/identifiers": "workspace:^0.0.1",
 		"@ethersproject/bignumber": "^5.7.0",
 		"@ethersproject/hash": "^5.7.0",
 		"@iconify-json/tabler": "^1.1.60",

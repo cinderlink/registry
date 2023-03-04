@@ -594,6 +594,7 @@ importers:
 
   frontend:
     specifiers:
+      '@candor/identifiers': workspace:^0.0.1
       '@candor/ui-kit': workspace:../../core/packages/ui-kit
       '@ethersproject/bignumber': ^5.7.0
       '@ethersproject/hash': ^5.7.0
@@ -630,6 +631,7 @@ importers:
     dependencies:
       '@candor/ui-kit': link:../../core/packages/ui-kit
     devDependencies:
+      '@candor/identifiers': link:../../core/packages/identifiers
       '@ethersproject/bignumber': 5.7.0
       '@ethersproject/hash': 5.7.0
       '@iconify-json/tabler': 1.1.63

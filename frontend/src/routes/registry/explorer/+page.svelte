@@ -66,17 +66,23 @@
 <LoadRegistryUser passthrough let:user let:error let:registered let:connected>
 	<Panel invert classes="mt-8">
 		<div class="flex-1 flex flex-row gap-4 items-center justify-center">
-			<div class="i-tabler-alert-triangle-filled text-yellow-400 dark-(text-yellow-100) text-3xl" />
 			{#if user}
-				<Typography el="p">
+				<div class="i-tabler-circle-check-filled text-green-400 dark-(text-green-100) text-3xl" />
+				<Typography el="p" classes="text-green-100">
 					Connected as <strong>{user.name} ({user.did})</strong>
 				</Typography>
 			{:else if !connected}
+				<div
+					class="i-tabler-alert-triangle-filled text-yellow-400 dark-(text-yellow-100) text-3xl"
+				/>
 				<Typography el="h4" classes="text-purple-200">
 					You must connect a wallet before you can contribute to the registry
 				</Typography>
 				<OnboardButton variant="green" />
 			{:else if !registered}
+				<div
+					class="i-tabler-alert-triangle-filled text-yellow-400 dark-(text-yellow-100) text-3xl"
+				/>
 				<Typography el="h4" classes="text-purple-200">
 					You must register before you can contribute to the registry
 				</Typography>
@@ -85,6 +91,7 @@
 					Register
 				</Button>
 			{:else if error}
+				<div class="i-tabler-alert-triangle-filled text-red-400 dark-(text-red-100) text-3xl" />
 				<Typography el="h4" classes="text-purple-200">
 					{error}
 				</Typography>

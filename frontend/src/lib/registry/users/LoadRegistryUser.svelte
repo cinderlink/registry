@@ -41,7 +41,7 @@
 				</slot>
 			{/if}
 		{:else}
-			{#await contract.getUser()}
+			{#await contract['getUser()']()}
 				<LoadingIndicator>
 					<div class="i-tabler-spinner animate-spin" />
 					Loading registry account...
