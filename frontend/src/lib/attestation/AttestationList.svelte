@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { web3 } from '@candor/ui-kit';
 	import type { ethers } from 'ethers';
+	import { onMount } from 'svelte/types/runtime/internal/lifecycle';
+	import { getUserAttestations } from './attestation';
 	export let address: string;
-	export let contract: ethers.Contract;
 	export const map: Record<
 		string,
 		{
@@ -12,13 +14,8 @@
 	> = {};
 
 	let attestations: ethers.providers.Log[] = [];
-	$: {
-		attestations = getUserAttestations(address);
-		console.info('attestations', attestations);
-	}
-
-	async function getUserAttestations(address: string) {
-		const filter = await contract.filters.AttestationCreated(address);
-		return contract.queryFilter(filter);
-	}
+	onMount(async () => {
+		attestations = await getUserAttestations(address, $web3.providers.JsonRpcProvider);
+		console.log('debug: | attestations:', attestations);
+	});
 </script>
