@@ -24,6 +24,8 @@ contract CinderStaking {
     uint256 public ownerBalance;
 
     uint256 public minStakeAmount = 1000;
+    uint256 public minRegCreateAmount = 10000;
+    uint256 public minRegModerateAmount = 100000;
     uint256 public earlyUnstakeInterval = 7 days;
     uint256 public earlyUnstakeFee = 10; // 10% early unstake fee
     uint256 public unstakeFee = 2; // 2% unstake fee
@@ -48,10 +50,12 @@ contract CinderStaking {
     event Staked(address indexed staker, uint256 amount);
     event Unstaked(address indexed staker, uint256 amount);
     event Claimed(address indexed staker, uint256 amount);
+    PermissionRegistry permissions;
 
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress, address _permissionsAddress) {
         owner = msg.sender;
         tokenAddress = _tokenAddress;
+        permissions = PermissionRegistry(_permissionsAddress);
     }
 
     function stake(uint256 _amount) public {
@@ -65,6 +69,14 @@ contract CinderStaking {
             stakerId = ++counter;
             stakers[stakerId] = Staker(0, 0, 0, 0, msg.sender, address(0));
             stakerIds[msg.sender] = stakerId;
+        }
+
+        if (stakers[stakerId].amountStaked >= minRegCreateAmount) {
+            permissions.grantPermission(msg.sender, "cndr.reg.create");
+        }
+
+        if (stakers[stakerId].amountStaked >= minRegModerateAmount) {
+            permissions.grantPermission(msg.sender, "cndr.reg.moderate");
         }
 
         stakers[stakerId].amountStaked += _amount;
@@ -88,6 +100,14 @@ contract CinderStaking {
         uint256 ownerFeeAmount = feeAmount * ownerFeePercentage / 100;
         ownerBalance += ownerFeeAmount;
         daoBalance += feeAmount - ownerFeeAmount;
+
+        if (stakers[stakerId].amountStaked < minRegCreateAmount) {
+            permissions.revokePermission(msg.sender, "cndr.reg.create");
+        }
+
+        if (stakers[stakerId].amountStaked < minRegModerateAmount) {
+            permissions.revokePermission(msg.sender, "cndr.reg.moderate");
+        }
 
         emit Unstaked(msg.sender, _amount);
     }

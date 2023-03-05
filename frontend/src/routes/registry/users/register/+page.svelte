@@ -39,10 +39,8 @@
 		txHash = receipt.transactionHash;
 	}
 
-	$: if (username.length) {
-		contract['usernameTaken(string)'](username).then((taken: boolean) => {
-			usernameTaken = taken;
-		});
+	async function checkUsernameTaken() {
+		usernameTaken = await contract['exists(string)'](username);
 	}
 </script>
 
@@ -58,7 +56,13 @@
 	<Button href="/registry/explorer" variant="green">Explore the registry</Button>
 {:else}
 	<div class="flex flex-col gap-4 mt-4">
-		<Input bind:value={username} id="username" label="Username" placeholder="@drew" />
+		<Input
+			bind:value={username}
+			on:blur={checkUsernameTaken}
+			id="username"
+			label="Username"
+			placeholder="@drew"
+		/>
 		{#if usernameTaken}
 			<Typography el="p" classes="text-red-600">
 				<div class="i-tabler-alert-triangle" />

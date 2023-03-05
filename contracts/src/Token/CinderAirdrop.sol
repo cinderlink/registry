@@ -17,6 +17,7 @@ contract CinderAirdrop is PermissionedContract {
     struct AirdropUser {
         address user;
         uint256 unclaimed;
+        uint256 claimed;
         uint256 trustClaim;
         uint256 lastGrantedAt;
         uint256 lastClaimedAt;
@@ -44,19 +45,24 @@ contract CinderAirdrop is PermissionedContract {
 
     function claim() public {
         requirePermission("claim");
-        require(claimants[msg.sender].unclaimed > 0, "Nothing to claim");
         int256 _trust = attestation.trust(msg.sender);
         require(attestation.trust(msg.sender) > int256(minimumTrust), "Not enough trust");
         if (int256(claimants[msg.sender].trustClaim) < _trust) {
             claimants[msg.sender].unclaimed += uint256(_trust - int256(claimants[msg.sender].trustClaim)) * TRUST_MULTI;
             claimants[msg.sender].trustClaim = uint256(_trust);
         }
+        require(claimants[msg.sender].unclaimed > 0, "Nothing to claim");
         cinderToken.transfer(msg.sender, claimants[msg.sender].unclaimed);
+        claimants[msg.sender].claimed += claimants[msg.sender].unclaimed;
         claimants[msg.sender].unclaimed = 0;
         claimants[msg.sender].lastClaimedAt = block.timestamp;
     }
 
     function unclaimed() public view returns (uint256) {
         return claimants[msg.sender].unclaimed;
+    }
+
+    function claimed() public view returns (uint256) {
+        return claimants[msg.sender].claimed;
     }
 }

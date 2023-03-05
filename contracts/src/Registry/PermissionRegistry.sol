@@ -3,6 +3,7 @@ pragma solidity ^0.8.19;
 
 import "../util/CandorStrings.sol";
 import "./UserRegistry.sol";
+import {console} from "forge-std/console.sol";
 
 contract PermissionRegistry {
     address owner;
@@ -68,6 +69,7 @@ contract PermissionRegistry {
 
     function getPermissionId(string memory _name) public view returns (uint256) {
         string memory slug = CandorStrings.slugify(_name);
+        console.log("permission id: %s, %s", _name, slug);
         return permissionIds[slug];
     }
 
@@ -221,6 +223,8 @@ contract PermissionRegistry {
 
     function grantPermission(uint256 _userId, uint256 _permissionId) public {
         require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(permissions[_permissionId].id != 0, "Permission does not exist");
+        console.log("Origin: %s, owner: %s, permission Id: %s", msg.sender, permissions[_permissionId].owner);
         require(
             permissions[_permissionId].owner == msg.sender || msg.sender == owner,
             "Only the owner of a permission can grant it"
@@ -276,6 +280,21 @@ contract PermissionRegistry {
         require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
         uint256 permissionId = getPermissionId(_name);
         revokePermission(_userId, permissionId);
+    }
+
+    function revokePermission(string memory _username, uint256 _permissionId) public {
+        uint256 userId = users.getId(_username);
+        revokePermission(userId, _permissionId);
+    }
+
+    function revokePermission(address _addr, uint256 _permissionId) public {
+        uint256 userId = users.getId(_addr);
+        revokePermission(userId, _permissionId);
+    }
+
+    function revokePermission(address _addr, string memory _name) public {
+        uint256 userId = users.getId(_addr);
+        revokePermission(userId, _name);
     }
 
     function revokeAllPermissions(uint256 _userId) public {

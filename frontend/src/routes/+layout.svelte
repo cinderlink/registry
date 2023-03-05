@@ -13,7 +13,7 @@
 			<div class="flex w-full justify-center items-center">
 				<Logo />
 			</div>
-			<a id="brand" href="/">@candor/registry</a>
+			<a id="brand" href="/">Registry</a>
 			<nav class="flex-1 flex flex-col gap-2">
 				<Button variant="green" href="/airdrop">
 					<div class="i-tabler-parachute" />

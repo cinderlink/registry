@@ -4,10 +4,13 @@
 	import CinderAirdrop from '$lib/contracts/CinderAirdrop';
 	import { ethers } from 'ethers';
 	import { onMount } from 'svelte';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
+	import { page } from '$app/stores';
 
+	export let data: PageData;
 	export let form: ActionData;
-	console.info('server data', form);
+
+	console.info('server data', form, 'page dataq', data, $page.form);
 
 	let airdrop: ethers.Contract;
 	let unclaimed = 0;

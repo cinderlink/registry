@@ -36,7 +36,7 @@ contract EntityRegistry is PermissionedContract {
     }
 
     function register(string memory _name, uint256 _typeId) public returns (uint256) {
-        requirePermission("register");
+        requirePermission("create");
         require(!exists(_name), "Entity already registered");
         require(types.exists(_typeId), "Entity type does not exist");
 
@@ -60,7 +60,7 @@ contract EntityRegistry is PermissionedContract {
 
     function remove(uint256 _id) public {
         require(exists(_id), "Entity does not exist");
-        requirePermission("delete");
+        requirePermission("moderate");
 
         delete entities[_id];
         delete entityIds[entities[_id].name];
@@ -95,7 +95,7 @@ contract EntityRegistry is PermissionedContract {
     {
         uint256[] memory ids = new uint256[](0);
         uint256 _counter = 0;
-        for (uint256 i = _offset; i < entityTypeIds[_typeId].length; i++) {
+        for (uint256 i = _offset; i < _limit; i++) {
             if (exists(entityTypeIds[_typeId][i])) {
                 ids[_counter] = entityTypeIds[_typeId][i];
                 _counter++;

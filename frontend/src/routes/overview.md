@@ -1,6 +1,6 @@
-# What is the Candor Registry?
+# What is the Registry?
 
-The candor registry is a global schema-based database that describes any thing and the relationships that one thing has to other things.
+The registry is a global schema-based database that describes any thing and the relationships that one thing has to other things.
 
 Anyone can contribute to the registry and add scoped definitions to existing entities.
 

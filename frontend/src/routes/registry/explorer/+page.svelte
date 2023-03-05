@@ -64,7 +64,7 @@
 </div>
 
 <LoadRegistryUser passthrough let:user let:error let:registered let:connected>
-	<Panel invert classes="mt-8">
+	<Panel dark classes="mt-8">
 		<div class="flex-1 flex flex-row gap-4 items-center justify-center">
 			{#if user}
 				<div class="i-tabler-circle-check-filled text-green-400 dark-(text-green-100) text-3xl" />
