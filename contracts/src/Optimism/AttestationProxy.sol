@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.19;
 
 // Copied from FlipsideCrypto's
 // https://github.com/FlipsideCrypto/user_metrics/blob/main/apps/optimism/attestation_contracts/contracts/FlipsideAttestation.sol
 // with small changes.
 
-
-// To verify signatures
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
-// The owner is the signer
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { PermissionedContract } from "../Registry/PermissionedContract.sol";
 
 
 interface IAttestationStation {
@@ -30,18 +26,21 @@ interface IAttestationStation {
     function attest(AttestationData[] memory _attestations) external;
 }
 
-
-contract AttestationProxy is Ownable {
+contract AttestationProxy is PermissionedContract {
     using ECDSA for bytes32;
 
     /// @dev The interface for OP's Attestation Station.
     IAttestationStation public attestationStation;
-    mapping(address => int256) public trustTotal;
+    mapping(address => int256) public trust;
+    mapping(address => mapping(address => uint256)) public attestedAmount;
+
+    uint256 constant MIN_ATTEST_TRUST = 100;
 
     constructor(
-        address _attestationStation
-    ) {
-        attestationStation = IAttestationStation(_attestationStation);
+        address _attestationAddress,
+        address _permissionsAddress
+    ) PermissionedContract(msg.sender, "airdrop", _permissionsAddress) {
+        attestationStation = IAttestationStation(_attestationAddress);
     }
 
     /**
@@ -51,37 +50,33 @@ contract AttestationProxy is Ownable {
      * Requirements:
      * - The caller must be the current owner.
      */
-    function setAttestationStation(address _attestationStation) public 
-    onlyOwner    
-    {
+    function setAttestationStation(address _attestationStation) public {
+        require(owner == msg.sender, "AttestationProxy: caller is not the owner");
         attestationStation = IAttestationStation(_attestationStation);
     }
 
-    /**
-     * @notice Attest data
-     * @param _about The address of the account to be attested.
-     * @param _key The key of the attestation.
-     * @param _val The value of the attestation.
-     * @param _signature The signature of the attestation.
-     */
-    function attest(
-          address _about
-        , bytes32 _key
-        , bytes memory _val
-        , bytes memory _signature
-    ) 
-        public
-    {
-        int256 _trustValue = abi.decode(_val, (int256));
-        require(_trustValue == -1 || _trustValue == 0 || _trustValue == 1, "AttestationProxy: Invalid trust value");
-        trustTotal[_about] += _trustValue;
+    function attested(
+        address _about,
+        address _attester
+    ) public view returns (uint256) {
+        return attestedAmount[_about][_attester];
+    }
 
-        _verifySignature(
-              _about
-            , _key
-            , _val
-            , _signature
+    function attest(address _about, bytes32 _key, bytes memory _val) public {
+        int256 _trustValue = abi.decode(_val, (int256));
+        require(
+            // user can't attest greater than their own trust for an address
+            (
+                owner == msg.sender ||
+                userHasPermission("attest", msg.sender) || 
+                (
+                    int256(attested(_about, msg.sender)) + _trustValue <= trust[msg.sender] && 
+                    int256(attested(_about, msg.sender)) - _trustValue >= (trust[msg.sender] * -1)
+                )
+            ),
+            "AttestationProxy: Attestation limit reached for this address"
         );
+        trust[_about] += _trustValue;
 
         // Send the attestation to the Attestation Station.
         IAttestationStation.AttestationData[] memory attestations = new IAttestationStation.AttestationData[](1);
@@ -91,36 +86,5 @@ contract AttestationProxy is Ownable {
             , val: _val
         });
         attestationStation.attest(attestations);
-    }
-
-    /**
-     * @notice Verifies the attestation data before calling the OP AttestationStation attest.
-     * @param _about The address of the account to be attested.
-     * @param _key The key of the attestation.
-     * @param _val The value of the attestation.
-     * @param _signature The signer's signed message of the attestation.
-     * 
-     * Requirements:
-     * - The signature must resolve to the signer.
-     */
-    function _verifySignature(
-          address _about
-        , bytes32 _key
-        , bytes memory _val
-        , bytes memory _signature
-    )
-        internal
-        view
-    {
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                  _about
-                , _key
-                , _val
-            )
-        );
-
-        require(messageHash.toEthSignedMessageHash().recover(_signature) == owner(), 
-            "AttestationProxy: Invalid signature");
     }
 }

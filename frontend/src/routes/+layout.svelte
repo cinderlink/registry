@@ -15,7 +15,11 @@
 			</div>
 			<a id="brand" href="/">@candor/registry</a>
 			<nav class="flex-1 flex flex-col gap-2">
-				<Button variant="green" href="/registry/explorer">
+				<Button variant="green" href="/airdrop">
+					<div class="i-tabler-parachute" />
+					Airdrop
+				</Button>
+				<Button variant="yellow" href="/registry/explorer">
 					<div class="i-tabler-compass" />
 					Explorer
 				</Button>
