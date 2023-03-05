@@ -8,7 +8,7 @@
     "highlightjs-solidity": "^2.0.6",
     "minimist": "^1.2.8",
     "prettier": "^2.8.4",
-    "prettier-plugin-solidity": "^1.1.2"
+    "prettier-plugin-solidity": "^1.1.3"
   },
   "scripts": {
     "watch": "forge test --watch -vv",
@@ -17,7 +17,7 @@
     "anvil:deploy:registry": "source .env && forge script script/Deploy.s.sol --fork-url $TESTNET_RPC_URL --broadcast",
     "anvil:deploy:nft": "source .env && forge script script/DeployNFT.s.sol --fork-url $TESTNET_RPC_URL --broadcast",
     "anvil:deploy:attestation": "source .env && forge script script/DeployAttestation.s.sol --fork-url $TESTNET_RPC_URL --broadcast",
-    "contracts:frontend": "pnpm contracts:export --format=ts && mv ./export/* ../frontend/src/lib/",
+    "contracts:frontend": "pnpm contracts:clean && pnpm contracts:export --format=ts && mv ./export/* ../frontend/src/lib/",
     "contracts:clean": "rm -rf ../frontend/src/lib/contracts && rm ../frontend/src/lib/contracts.ts",
     "anvil:deploy": "pnpm anvil:deploy:registry && pnpm anvil:deploy:nft && pnpm anvil:deploy:attestation && pnpm contracts:frontend",
     "base:deploy": "source .env && forge script script/Deploy.s.sol --fork-url https://goerli.base.org/ --broadcast",
