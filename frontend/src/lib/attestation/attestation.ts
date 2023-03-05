@@ -1,12 +1,20 @@
 import { ethers } from 'ethers';
 import { AttestationStation } from '$lib/contracts/AttestationStation';
 
-export interface AttestationOption {
+export interface AttestationInput {
 	key: string;
 	label: string;
 	value?: number;
 	valueFn?: (address: string) => number;
 }
+
+export type AttestationOutput = {
+	creator: string;
+	about: string;
+	key: string;
+	val: number;
+	tx: unknown;
+};
 
 export function getContract(
 	address: string,
@@ -25,14 +33,13 @@ export function encodeRawKey(key: string) {
 
 export async function attest(
 	signer: ethers.Signer,
-	attestation: AttestationOption,
+	attestation: AttestationInput,
 	address: string
 ) {
 	const contract = getContract(AttestationStation.address, AttestationStation.abi, signer);
 	if (!contract) {
 		return 'No AttestationStation contract found';
 	}
-
 	const tx = await contract.attest([
 		{
 			about: address,
@@ -50,30 +57,82 @@ export async function getUserAttestations(address: string, provider: ethers.prov
 	const contract = getContract(AttestationStation.address, AttestationStation.abi, provider);
 	const filter = await contract.filters.AttestationCreated(address);
 	const logs = await contract.queryFilter(filter);
-	let result: Record<string, unknown>[] = [];
-	// const abiCoder = new ethers.utils.AbiCoder();
-	const interF = new ethers.utils.Interface(AttestationStation.abi);
+	const resutls: AttestationOutput[] = [];
 	logs.map((log) => {
-		// console.log('debug: | logs.map | log:', log);
-		// // const decoded = abiCoder.decode(['address', 'address', 'bytes32', 'bytes'], log.data);
-		// const about = abiCoder.decode(['address', 'bytes'], log.data, true);
-		// console.log('debug: | logs.map | decoded:', about);
-		const parsed = interF.parseLog(log);
-		result = [...result, { blockNumber: log.blockNumber, address: log.address, ...parsed.args }];
+		const [creator, about, key, val] = log.args as [string, string, string, string];
+		resutls.push({
+			creator,
+			about,
+			key: ethers.utils.parseBytes32String(key),
+			val: Number(val),
+			tx: log.transactionHash
+		});
 	});
-	return result;
+	return resutls;
+}
+
+export function attestationCreatedListener(
+	provider: ethers.providers.Provider
+): Promise<AttestationOutput> {
+	const contract = getContract(AttestationStation.address, AttestationStation.abi, provider);
+	return new Promise((resolve) => {
+		contract.once('AttestationCreated', (creator, about, key, val, tx) => {
+			return resolve({
+				creator,
+				about,
+				key: ethers.utils.parseBytes32String(key),
+				val: Number(val),
+				tx
+			});
+		});
+	});
 }
 
 export function calculateAttestationSum(
-	logs: ethers.providers.Log[],
-	config: { include?: string[]; exclude?: string[] }
-) {
-	const { include, exclude } = config;
+	attestations: AttestationOutput[],
+	config: { include?: string; exclude?: string; attestationKey: 'key' | 'val' }
+): { sum: number; totalSum: number; attestationsCount: number; attestations: AttestationOutput[] } {
+	const { include, exclude, attestationKey } = config;
+	const result: AttestationOutput[] = [];
+	let sum = 0;
+	let totalSum = 0;
+	attestations.map((att) => {
+		totalSum += att.val;
+	});
+
 	if (include?.length) {
-		// if include is set, we only count the included attestations
+		attestations.map((att) => {
+			if (attestationKey === 'val') {
+				if (Number(att[attestationKey]) === Number(include)) {
+					result.push(att);
+					sum += att.val;
+				}
+			} else if (attestationKey === 'key') {
+				if (att[attestationKey].includes(include)) {
+					result.push(att);
+					sum += att.val;
+				}
+			}
+		});
 	}
 
 	if (exclude?.length) {
-		// if exclude is set, we only count the excluded attestations
+		attestations.map((att) => {
+			if (attestationKey === 'val') {
+				if (Number(att[attestationKey]) !== Number(exclude)) {
+					result.push(att);
+					sum += att.val;
+				}
+			} else if (attestationKey === 'key') {
+				if (!att[attestationKey].includes(exclude)) {
+					result.push(att);
+					sum += att.val;
+				}
+			}
+		});
 	}
+
+	const attestationsCount = result.length;
+
+	return { sum, totalSum, attestationsCount, attestations: result };
 }

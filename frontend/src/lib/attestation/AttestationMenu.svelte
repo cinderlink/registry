@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { LoadingIndicator, web3 } from '@candor/ui-kit';
 	import { Button, Dropdown, List, Panel, theme, Typography, type Size } from '@candor/ui-kit';
-	import { attest, type AttestationOption } from './attestation';
+	import { attest, type AttestationInput } from './attestation';
 	import { onboard } from '@candor/ui-kit/onboard';
 
 	export let address: string;
@@ -9,13 +9,13 @@
 	export let size: Size = 'md';
 	export let align: 'left' | 'right' = 'left';
 
-	export let options: AttestationOption[] = [];
+	export let options: AttestationInput[] = [];
 
 	let attesting = false;
 	let error: string | undefined = undefined;
 	let success: boolean = false;
 
-	async function selectAttestationOption(option: AttestationOption) {
+	async function selectAttestationOption(option: AttestationInput) {
 		if (!$web3.provider) {
 			console.warn(`ui-kit/AttestationMenu: No wallet provider found`, $web3);
 			error = 'No wallet provider found';
