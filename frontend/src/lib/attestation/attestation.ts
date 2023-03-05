@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { AttestationStation } from '$lib/contracts/AttestationStation';
 
 export interface AttestationOption {
@@ -32,6 +32,7 @@ export async function attest(
 	if (!contract) {
 		return 'No AttestationStation contract found';
 	}
+
 	const tx = await contract.attest([
 		{
 			about: address,
@@ -39,6 +40,7 @@ export async function attest(
 			val: attestation.value ?? attestation.valueFn?.(address)
 		}
 	]);
+
 	const receipt = await tx.wait();
 
 	return receipt;
@@ -47,7 +49,19 @@ export async function attest(
 export async function getUserAttestations(address: string, provider: ethers.providers.Provider) {
 	const contract = getContract(AttestationStation.address, AttestationStation.abi, provider);
 	const filter = await contract.filters.AttestationCreated(address);
-	return await contract.queryFilter(filter);
+	const logs = await contract.queryFilter(filter);
+	let result: Record<string, unknown>[] = [];
+	// const abiCoder = new ethers.utils.AbiCoder();
+	const interF = new ethers.utils.Interface(AttestationStation.abi);
+	logs.map((log) => {
+		// console.log('debug: | logs.map | log:', log);
+		// // const decoded = abiCoder.decode(['address', 'address', 'bytes32', 'bytes'], log.data);
+		// const about = abiCoder.decode(['address', 'bytes'], log.data, true);
+		// console.log('debug: | logs.map | decoded:', about);
+		const parsed = interF.parseLog(log);
+		result = [...result, { blockNumber: log.blockNumber, address: log.address, ...parsed.args }];
+	});
+	return result;
 }
 
 export function calculateAttestationSum(
@@ -55,7 +69,6 @@ export function calculateAttestationSum(
 	config: { include?: string[]; exclude?: string[] }
 ) {
 	const { include, exclude } = config;
-	console.log('debug: | logs:', logs);
 	if (include?.length) {
 		// if include is set, we only count the included attestations
 	}

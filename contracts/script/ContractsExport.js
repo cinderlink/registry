@@ -19,6 +19,9 @@ fs.mkdirSync(`export/contracts`, { recursive: true });
 
 ["Deploy.s.sol", "DeployNFT.s.sol", "DeployAttestation.s.sol"].forEach(
   (script) => {
+    if(!fs.existsSync("./broadcast/" + script + "/31337/run-latest.json")) {
+      return
+    }
     const artifact = JSON.parse(
       fs.readFileSync(
         "./broadcast/" + script + "/31337/run-latest.json",

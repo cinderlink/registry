@@ -26,18 +26,13 @@
 			error = 'No signer found';
 			return;
 		}
-
 		attesting = true;
 		error = undefined;
 		success = false;
-		const res = await attest($web3.signer, option, address);
-		console.log('debug: | selectAttestationOption | res:', res);
-
+		await attest($web3.signer, option, address);
 		attesting = false;
 	}
 </script>
-
-<Typography el="h1" classes="mb-4">Attestation - Svelte</Typography>
 
 {#if !$web3.connected}
 	<Panel>
