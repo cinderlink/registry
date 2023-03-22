@@ -81,22 +81,26 @@
 <Typography el="h4">Filter Attestations</Typography>
 <Input id="attestation-{address}" placeholder="Address" bind:value={filterAddress} />
 <form class="flex flex-row gap-4" on:submit|preventDefault={filterAttestations}>
-	<Select
-		id="attestation-keys"
-		options={[
-			{ label: 'Attestation Key', value: 'key' },
-			{ label: 'Attestation Value', value: 'val' }
-		]}
-		on:selected={(e) => (selectedKey = e.detail.value)}
-	/>
-	<Select
-		id="attestation-filter"
-		options={[
-			{ label: 'Includes', value: 'include' },
-			{ label: 'Excludes', value: 'exclude' }
-		]}
-		on:selected={(e) => (selectedFilter = e.detail.value)}
-	/>
+	<div>
+		<Select
+			id="attestation-keys"
+			options={[
+				{ label: 'Attestation Key', value: 'key' },
+				{ label: 'Attestation Value', value: 'val' }
+			]}
+			on:selected={(e) => (selectedKey = e.detail.value)}
+		/>
+	</div>
+	<div>
+		<Select
+			id="attestation-filter"
+			options={[
+				{ label: 'Includes', value: 'include' },
+				{ label: 'Excludes', value: 'exclude' }
+			]}
+			on:selected={(e) => (selectedFilter = e.detail.value)}
+		/>
+	</div>
 	<Input id="attestation-value" placeholder="Value" bind:value={filterValue} />
 
 	<Button type="submit" variant="green">Filter</Button>
