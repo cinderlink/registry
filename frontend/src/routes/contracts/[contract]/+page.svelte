@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Markdown } from '@candor/ui-kit';
+	import { Markdown } from '@cinderlink/ui-kit';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

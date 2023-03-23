@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { web3 } from '@candor/ui-kit/web3';
-	import { onboard, OnboardButton } from '@candor/ui-kit/onboard';
+	import { web3 } from '@cinderlink/ui-kit/web3';
+	import { onboard, OnboardButton } from '@cinderlink/ui-kit/onboard';
 	import CinderAirdrop from '$lib/contracts/CinderAirdrop';
 	import { ethers } from 'ethers';
 	import { onMount } from 'svelte';

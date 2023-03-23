@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { BigNumber, ethers } from 'ethers';
-	import { web3 } from '@candor/ui-kit/web3';
-	import { OnboardButton } from '@candor/ui-kit/onboard';
+	import { web3 } from '@cinderlink/ui-kit/web3';
+	import { OnboardButton } from '@cinderlink/ui-kit/onboard';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
-	import { Avatar, Button, LoadingIndicator, Panel, Typography } from '@candor/ui-kit';
+	import { Avatar, Button, LoadingIndicator, Panel, Typography } from '@cinderlink/ui-kit';
 	import { createSignatureMessage } from '$lib/airdrop';
 	import { enhance } from '$app/forms';
 	import type { Actions } from '@sveltejs/kit';
