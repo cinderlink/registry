@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Markdown } from '@candor/ui-kit';
+	import { Markdown } from '@cinderlink/ui-kit';
 	import markdown from './overview.md?raw';
 </script>
 

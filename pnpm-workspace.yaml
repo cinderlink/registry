@@ -3,3 +3,4 @@ packages:
   - "frontend/"
   - "contracts/*"
   - "../core/packages/*"
+  - "../core/apps/*"

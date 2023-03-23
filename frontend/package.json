@@ -1,5 +1,5 @@
 {
-	"name": "@candor/registry-frontend",
+	"name": "@cinderlink/registry-frontend",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -14,8 +14,8 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@candor/identifiers": "workspace:^0.0.1",
-		"@candor/ui-kit": "workspace:../../core/packages/ui-kit",
+		"@cinderlink/identifiers": "workspace:^0.0.1",
+		"@cinderlink/ui-kit": "workspace:^0.0.1",
 		"@ethersproject/bignumber": "^5.7.0",
 		"@ethersproject/hash": "^5.7.0",
 		"@ethersproject/shims": "^5.7.0",

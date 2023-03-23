@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "../util/CandorStrings.sol";
+import "../util/CinderlinkStrings.sol";
 import "./UserRegistry.sol";
 import {console} from "forge-std/console.sol";
 
@@ -44,7 +44,7 @@ contract PermissionRegistry {
             "Only the owner can register permissions on behalf of others"
         );
 
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         require(!exists(slug), "Permission already registered");
 
         uint256 id = ++counter;
@@ -63,12 +63,12 @@ contract PermissionRegistry {
     }
 
     function exists(string memory _name) public view returns (bool) {
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         return permissionIds[slug] > 0;
     }
 
     function getPermissionId(string memory _name) public view returns (uint256) {
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         console.log("permission id: %s, %s", _name, slug);
         return permissionIds[slug];
     }
@@ -78,7 +78,7 @@ contract PermissionRegistry {
     }
 
     function getPermission(string memory _name) public view returns (Permission memory) {
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         return permissions[permissionIds[slug]];
     }
 
@@ -87,7 +87,7 @@ contract PermissionRegistry {
     }
 
     function getPermissionCid(string memory _name) public view returns (string memory) {
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         return permissions[permissionIds[slug]].cid;
     }
 
@@ -108,7 +108,7 @@ contract PermissionRegistry {
             permissions[_id].owner == msg.sender || msg.sender == owner,
             "Only the owner of a permission can update the name"
         );
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         permissions[_id].name = slug;
     }
 
@@ -147,7 +147,7 @@ contract PermissionRegistry {
 
         delete permissionIds[permissions[_id].name];
 
-        string memory slug = CandorStrings.slugify(_name);
+        string memory slug = CinderlinkStrings.slugify(_name);
         permissions[_id].name = slug;
         permissions[_id].cid = _cid;
         permissions[_id].parent = _parent;
@@ -167,7 +167,7 @@ contract PermissionRegistry {
     }
 
     function userHasPermission(uint256 _userId, uint256 _permissionId) public view returns (bool) {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         UserPermissions memory userPermission = userPermissions[_userId];
         for (uint256 i = 0; i < userPermission.counter; i++) {
             if (userPermission.permissions[i] == _permissionId) {
@@ -178,7 +178,7 @@ contract PermissionRegistry {
     }
 
     function userHasPermission(address _address, uint256 _permissionId) public view returns (bool) {
-        require(users.exists(_address), string.concat("User does not exist: ", CandorStrings.address2str(_address)));
+        require(users.exists(_address), string.concat("User does not exist: ", CinderlinkStrings.address2str(_address)));
         if (_address == owner) {
             return true;
         }
@@ -187,7 +187,7 @@ contract PermissionRegistry {
     }
 
     function userHasPermission(address _address, string memory _name) public view returns (bool) {
-        require(users.exists(_address), string.concat("User does not exist: ", CandorStrings.address2str(_address)));
+        require(users.exists(_address), string.concat("User does not exist: ", CinderlinkStrings.address2str(_address)));
         if (_address == owner) {
             return true;
         }
@@ -206,7 +206,7 @@ contract PermissionRegistry {
     }
 
     function userHasPermission(uint256 _userId, string memory _name) public view returns (bool) {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         uint256 permissionId = getPermissionId(_name);
         return userHasPermission(_userId, permissionId);
     }
@@ -222,7 +222,7 @@ contract PermissionRegistry {
     }
 
     function grantPermission(uint256 _userId, uint256 _permissionId) public {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         require(permissions[_permissionId].id != 0, "Permission does not exist");
         console.log("Origin: %s, owner: %s, permission Id: %s", msg.sender, permissions[_permissionId].owner);
         require(
@@ -260,7 +260,7 @@ contract PermissionRegistry {
     }
 
     function revokePermission(uint256 _userId, uint256 _permissionId) public {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         require(
             permissions[_permissionId].owner == msg.sender || msg.sender == owner,
             "Only the owner of a permission can revoke it"
@@ -277,7 +277,7 @@ contract PermissionRegistry {
     }
 
     function revokePermission(uint256 _userId, string memory _name) public {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         uint256 permissionId = getPermissionId(_name);
         revokePermission(_userId, permissionId);
     }
@@ -298,7 +298,7 @@ contract PermissionRegistry {
     }
 
     function revokeAllPermissions(uint256 _userId) public {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         UserPermissions storage userPermission = userPermissions[_userId];
         for (uint256 i = 0; i < userPermission.counter; i++) {
             require(
@@ -314,7 +314,7 @@ contract PermissionRegistry {
         view
         returns (uint256[] memory)
     {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         UserPermissions memory userPermission = userPermissions[_userId];
         uint256[] memory result = new uint256[](_limit);
         for (uint256 i = 0; i < _limit; i++) {
@@ -324,7 +324,7 @@ contract PermissionRegistry {
     }
 
     function getUserPermissions(uint256 _userId) public view returns (uint256[] memory) {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         UserPermissions memory userPermission = userPermissions[_userId];
         uint256[] memory result = new uint256[](userPermission.counter);
         for (uint256 i = 0; i < userPermission.counter; i++) {
@@ -334,7 +334,7 @@ contract PermissionRegistry {
     }
 
     function getUserPermissionsCount(uint256 _userId) public view returns (uint256) {
-        require(users.exists(_userId), string.concat("User does not exist: ", CandorStrings.uint2str(_userId)));
+        require(users.exists(_userId), string.concat("User does not exist: ", CinderlinkStrings.uint2str(_userId)));
         UserPermissions memory userPermission = userPermissions[_userId];
         return userPermission.counter;
     }

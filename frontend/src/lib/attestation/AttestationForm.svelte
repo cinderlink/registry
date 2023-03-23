@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Select, web3 } from '@candor/ui-kit';
-	import { Button, Input, Typography } from '@candor/ui-kit';
+	import { Select, web3 } from '@cinderlink/ui-kit';
+	import { Button, Input, Typography } from '@cinderlink/ui-kit';
 	import { createEventDispatcher } from 'svelte';
 	import { attest, calculateAttestationSum, getUserAttestations } from './attestation';
 

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "../util/CandorArrays.sol";
-import "../util/CandorStrings.sol";
+import "../util/CinderlinkArrays.sol";
+import "../util/CinderlinkStrings.sol";
 import "./CinderStaking.sol";
 import "../Token/CinderToken.sol";
 import "../Registry/PermissionedContract.sol";

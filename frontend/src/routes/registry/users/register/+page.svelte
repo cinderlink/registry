@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { web3 } from '@candor/ui-kit/web3';
-	import { OnboardButton } from '@candor/ui-kit/onboard';
-	import { Button, Input, Typography } from '@candor/ui-kit';
-	import { createSignerDID } from '@candor/identifiers';
+	import { web3 } from '@cinderlink/ui-kit/web3';
+	import { OnboardButton } from '@cinderlink/ui-kit/onboard';
+	import { Button, Input, Typography } from '@cinderlink/ui-kit';
+	import { createSignerDID } from '@cinderlink/identifiers';
 	import { ethers } from 'ethers';
 	import { UserRegistry } from '$lib/contracts/UserRegistry';
 

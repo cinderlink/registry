@@ -19,7 +19,7 @@ contract CandorEarlyAccess is ERC721, Pausable, Ownable, ERC721Burnable, ERC721E
     constructor() ERC721("CandorEarlyAccess", "CEA") {}
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://nft.candor.social/early-access/1";
+        return "https://nft.Cinderlink.social/early-access/1";
     }
 
     function pause() public onlyOwner {

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { ethers } from 'ethers';
 	import { UserRegistry } from '$lib/contracts/UserRegistry';
-	import { Button } from '@candor/ui-kit/interactive';
-	import { web3 } from '@candor/ui-kit/web3';
-	import { onboard } from '@candor/ui-kit/onboard';
-	import { LoadingIndicator, Typography } from '@candor/ui-kit';
+	import { Button } from '@cinderlink/ui-kit/interactive';
+	import { web3 } from '@cinderlink/ui-kit/web3';
+	import { onboard } from '@cinderlink/ui-kit/onboard';
+	import { LoadingIndicator, Typography } from '@cinderlink/ui-kit';
 
 	export let passthrough = false;
 </script>

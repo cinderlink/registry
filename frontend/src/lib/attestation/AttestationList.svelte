@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Code, Input, Panel, Typography, web3 } from '@candor/ui-kit';
+	import { Button, Code, Input, Panel, Typography, web3 } from '@cinderlink/ui-kit';
 	import { onMount } from 'svelte';
 	import {
 		attestationCreatedListener,
