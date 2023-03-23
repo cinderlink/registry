@@ -15,7 +15,7 @@
 	},
 	"devDependencies": {
 		"@candor/identifiers": "workspace:^0.0.1",
-		"@candor/ui-kit": "workspace:../../core/packages/ui-kit",
+		"@cinderlink/ui-kit": "workspace:../ui-kit",
 		"@ethersproject/bignumber": "^5.7.0",
 		"@ethersproject/hash": "^5.7.0",
 		"@ethersproject/shims": "^5.7.0",

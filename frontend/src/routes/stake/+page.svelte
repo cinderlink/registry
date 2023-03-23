@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { CinderStaking, CinderToken } from '$lib/contracts';
-	import { Button, Input, Panel, Toggle, Typography } from '@candor/ui-kit';
-	import { OnboardButton } from '@candor/ui-kit/onboard';
-	import { web3, getContract } from '@candor/ui-kit/web3';
+	import { Button, Input, Panel, Toggle, Typography } from '@cinderlink/ui-kit';
+	import { OnboardButton } from '@cinderlink/ui-kit/onboard';
+	import { web3, getContract } from '@cinderlink/ui-kit/web3';
 	import { BigNumber, ethers } from 'ethers';
 	import { onMount } from 'svelte';
 

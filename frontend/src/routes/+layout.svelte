@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Drawer, Logo, SidebarLayout, Theme } from '@candor/ui-kit';
+	import { Button, Drawer, Logo, SidebarLayout, Theme } from '@cinderlink/ui-kit';
 	import type { LayoutData } from './$types';
 	import './layout.css';
 

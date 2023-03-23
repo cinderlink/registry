@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { LoadingIndicator, web3 } from '@candor/ui-kit';
-	import { Button, Dropdown, List, Panel, theme, Typography, type Size } from '@candor/ui-kit';
+	import { LoadingIndicator, web3 } from '@cinderlink/ui-kit';
+	import { Button, Dropdown, List, Panel, theme, Typography, type Size } from '@cinderlink/ui-kit';
 	import { attest, type AttestationInput } from './attestation';
-	import { onboard } from '@candor/ui-kit/onboard';
+	import { onboard } from '@cinderlink/ui-kit/onboard';
 
 	export let address: string;
 	export let label: string;
