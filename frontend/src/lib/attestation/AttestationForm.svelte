@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { Select, web3 } from '@cinderlink/ui-kit';
-	import { Button, Input, Typography } from '@cinderlink/ui-kit';
+	import { Select, Button, Input, Typography } from '@cinderlink/ui-kit';
+	import { wallet, wagmi } from 'swagmi';
+	import { getProvider, fetchSigner } from '@wagmi/core';
+
 	import { createEventDispatcher } from 'svelte';
 	import { attest, calculateAttestationSum, getUserAttestations } from './attestation';
 
@@ -20,13 +22,14 @@
 	let success: boolean = false;
 
 	async function submit() {
-		if (!$web3.provider) {
-			console.warn(`ui-kit/AttestationMenu: No wallet provider found`, $web3);
+		if (!$wallet.connected) {
+			console.warn(`registry/AttestationForm: No wallet found`);
 			error = 'No wallet provider found';
 			return;
 		}
 
-		if (!$web3.signer) {
+		const signer = await fetchSigner();
+		if (!signer) {
 			error = 'No signer found';
 			return;
 		}
@@ -34,7 +37,7 @@
 		attesting = true;
 		error = undefined;
 		success = false;
-		const res = await attest($web3.signer, { key, label, value }, address);
+		const res = await attest(signer, { key, label, value }, address);
 
 		attesting = false;
 		key = '';
@@ -44,8 +47,8 @@
 	}
 
 	async function filterAttestations() {
-		if (!$web3.provider) return;
-		const attestations = await getUserAttestations(filterAddress, $web3.provider);
+		if (!$wagmi.connected) return;
+		const attestations = await getUserAttestations(filterAddress, getProvider());
 		const config = {
 			include: selectedFilter === 'include' ? filterValue : undefined,
 			exclude: selectedFilter === 'exclude' ? filterValue : undefined,
