@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onboard } from '@candor/ui-kit/onboard';
-	import { web3 } from '@candor/ui-kit';
+	import { onboard } from '@cinderlink/ui-kit/onboard';
+	import { web3 } from '@cinderlink/ui-kit';
 	import AttestationList from '$lib/attestation/AttestationList.svelte';
-	import { Button, Panel, Typography } from '@candor/ui-kit';
+	import { Button, Panel, Typography } from '@cinderlink/ui-kit';
 	import AttestationForm from '$lib/attestation/AttestationForm.svelte';
 	import type { AttestationOutput } from '$lib/attestation/attestation';
 

@@ -39,9 +39,9 @@ contract CinderDAOTest is Test {
         delegate = vm.addr(2);
         vm.startPrank(deployer);
         token = new CinderToken();
-        staking = new CinderStaking(address(token));
         users = new UserRegistry();
         permissions = new PermissionRegistry(address(users));
+        staking = new CinderStaking(address(token), address(permissions));
         schemas = new SchemaRegistry("test.schema", address(permissions));
         entityTypes = new EntityTypeRegistry("test.entityType", address(permissions));
         entities = new EntityRegistry("test.entity", address(permissions), address(schemas));

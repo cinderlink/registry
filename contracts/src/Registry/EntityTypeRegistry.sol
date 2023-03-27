@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-import "../util/CandorStrings.sol";
+import "../util/CinderlinkStrings.sol";
 import "./PermissionRegistry.sol";
 import "./PermissionedContract.sol";
 
@@ -30,7 +30,7 @@ contract EntityTypeRegistry is PermissionedContract {
 
     function register(string memory _name) public returns (uint256) {
         require(!exists(_name), "Entity type already registered");
-        requirePermission("register");
+        requirePermission("create");
 
         uint256 id = ++counter;
         entityTypes[id] = EntityType(id, _name, msg.sender);
@@ -42,7 +42,7 @@ contract EntityTypeRegistry is PermissionedContract {
     function update(uint256 _id, string memory _name) public {
         require(exists(_id), "Entity type does not exist");
         require(!exists(_name), "Entity type already registered");
-        requirePermission(_id, "update");
+        requirePermission(_id, "create");
 
         entityTypes[_id].name = _name;
         entityTypeIds[_name] = _id;
@@ -50,7 +50,7 @@ contract EntityTypeRegistry is PermissionedContract {
 
     function remove(uint256 _id) public {
         require(exists(_id), "Entity type does not exist");
-        requirePermission(_id, "remove");
+        requirePermission(_id, "moderate");
 
         delete entityTypes[_id];
         delete entityTypeIds[entityTypes[_id].name];

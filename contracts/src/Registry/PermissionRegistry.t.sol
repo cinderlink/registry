@@ -14,6 +14,8 @@ contract PermissionRegistryTest is Test {
     function testRegister() public {
         uint256 id = permissions.registerPermission("test", "test");
         assertEq(id, 1);
+        address owner = permissions.getPermissionOwner(id);
+        require(owner == address(this), "Owner should be address(this)");
     }
 
     function testRegisterParent() public {
@@ -163,5 +165,9 @@ contract PermissionRegistryTest is Test {
 
         address owner = permissions.getPermissionOwner(id);
         require(owner == address(1), "Owner should be address(1)");
+    }
+
+    function testGrantPermission() public {
+
     }
 }

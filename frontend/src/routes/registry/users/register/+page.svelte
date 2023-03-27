@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { web3 } from '@candor/ui-kit/web3';
-	import { OnboardButton } from '@candor/ui-kit/onboard';
-	import { Button, Input, Typography } from '@candor/ui-kit';
-	import { createSignerDID } from '@candor/identifiers';
+	import { web3 } from '@cinderlink/ui-kit/web3';
+	import { OnboardButton } from '@cinderlink/ui-kit/onboard';
+	import { Button, Input, Typography } from '@cinderlink/ui-kit';
+	import { createSignerDID } from '@cinderlink/identifiers';
 	import { ethers } from 'ethers';
 	import { UserRegistry } from '$lib/contracts/UserRegistry';
 
@@ -39,10 +39,8 @@
 		txHash = receipt.transactionHash;
 	}
 
-	$: if (username.length) {
-		contract['usernameTaken(string)'](username).then((taken: boolean) => {
-			usernameTaken = taken;
-		});
+	async function checkUsernameTaken() {
+		usernameTaken = await contract['exists(string)'](username);
 	}
 </script>
 
@@ -58,7 +56,13 @@
 	<Button href="/registry/explorer" variant="green">Explore the registry</Button>
 {:else}
 	<div class="flex flex-col gap-4 mt-4">
-		<Input bind:value={username} id="username" label="Username" placeholder="@drew" />
+		<Input
+			bind:value={username}
+			on:blur={checkUsernameTaken}
+			id="username"
+			label="Username"
+			placeholder="@drew"
+		/>
 		{#if usernameTaken}
 			<Typography el="p" classes="text-red-600">
 				<div class="i-tabler-alert-triangle" />

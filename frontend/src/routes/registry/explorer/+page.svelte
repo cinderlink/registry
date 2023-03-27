@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { ethers } from 'ethers';
-	import { Button, Input, LoadingIndicator, Panel, Typography } from '@candor/ui-kit';
-	import { web3 } from '@candor/ui-kit';
-	import { OnboardButton } from '@candor/ui-kit/onboard';
+	import { Button, Input, LoadingIndicator, Panel, Typography } from '@cinderlink/ui-kit';
+	import { web3 } from '@cinderlink/ui-kit';
+	import { OnboardButton } from '@cinderlink/ui-kit/onboard';
 	import { EntityRegistry } from '$lib/contracts/EntityRegistry';
 	import { UserRegistry } from '$lib/contracts/UserRegistry';
 	import LoadRegistryUser from '$lib/registry/users/LoadRegistryUser.svelte';
@@ -64,7 +64,7 @@
 </div>
 
 <LoadRegistryUser passthrough let:user let:error let:registered let:connected>
-	<Panel invert classes="mt-8">
+	<Panel dark classes="mt-8">
 		<div class="flex-1 flex flex-row gap-4 items-center justify-center">
 			{#if user}
 				<div class="i-tabler-circle-check-filled text-green-400 dark-(text-green-100) text-3xl" />

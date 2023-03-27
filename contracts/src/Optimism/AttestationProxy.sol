@@ -5,9 +5,9 @@ pragma solidity 0.8.19;
 // https://github.com/FlipsideCrypto/user_metrics/blob/main/apps/optimism/attestation_contracts/contracts/FlipsideAttestation.sol
 // with small changes.
 
+import {console} from "forge-std/console.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { PermissionedContract } from "../Registry/PermissionedContract.sol";
-
 
 interface IAttestationStation {
     struct AttestationData {
@@ -32,7 +32,7 @@ contract AttestationProxy is PermissionedContract {
     /// @dev The interface for OP's Attestation Station.
     IAttestationStation public attestationStation;
     mapping(address => int256) public trust;
-    mapping(address => mapping(address => uint256)) public attestedAmount;
+    mapping(address => mapping(address => int256)) public attestedAmount;
 
     uint256 constant MIN_ATTEST_TRUST = 100;
 
@@ -58,33 +58,47 @@ contract AttestationProxy is PermissionedContract {
     function attested(
         address _about,
         address _attester
-    ) public view returns (uint256) {
-        return attestedAmount[_about][_attester];
+    ) public view returns (int256) {
+        return attestedAmount[_attester][_about];
     }
 
-    function attest(address _about, bytes32 _key, bytes memory _val) public {
-        int256 _trustValue = abi.decode(_val, (int256));
+    function attest(address _about, bytes32 _key, int256 _val) public returns (int256) {
+        // bytes to int
+        int256 trustMax = int256(attested(_about, msg.sender)) + _val;
+        int256 trustMin = int256(attested(_about, msg.sender)) - _val;
+        console.log("Trust max");
+        console.logInt(trustMax);
+        console.log("Trust min");
+        console.logInt(trustMin);
+        console.log("Val");
+        console.logInt(_val);
+        console.log("Trust");
+        console.logInt(trust[msg.sender]);
+
         require(
             // user can't attest greater than their own trust for an address
             (
                 owner == msg.sender ||
                 userHasPermission("attest", msg.sender) || 
                 (
-                    int256(attested(_about, msg.sender)) + _trustValue <= trust[msg.sender] && 
-                    int256(attested(_about, msg.sender)) - _trustValue >= (trust[msg.sender] * -1)
+                    trustMax >= trust[msg.sender] && 
+                    trustMin <= trust[msg.sender]
                 )
             ),
             "AttestationProxy: Attestation limit reached for this address"
         );
-        trust[_about] += _trustValue;
+        trust[_about] += _val;
+        attestedAmount[msg.sender][_about] += _val;
 
         // Send the attestation to the Attestation Station.
         IAttestationStation.AttestationData[] memory attestations = new IAttestationStation.AttestationData[](1);
         attestations[0] = IAttestationStation.AttestationData({
-              about: _about
-            , key: _key
-            , val: _val
+              about: _about,
+              key: _key,
+              val: abi.encodePacked(_val)
         });
         attestationStation.attest(attestations);
+
+        return _val;
     }
 }

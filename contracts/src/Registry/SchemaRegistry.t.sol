@@ -31,13 +31,13 @@ contract EntityRegistryTest is Test {
         require(schemas.exists(schemaId), "schema not found [exists(uint256)]");
 
         string memory name = schemas.getName(schemaId);
-        require(CandorStrings.isEqual(name, "test2"), "name mismatch [getName(uint256)]");
+        require(CinderlinkStrings.isEqual(name, "test2"), "name mismatch [getName(uint256)]");
 
         string memory cid = schemas.getCid(schemaId);
-        require(CandorStrings.isEqual(cid, "test2Cid"), "cid mismatch [getCid(uint256)]");
+        require(CinderlinkStrings.isEqual(cid, "test2Cid"), "cid mismatch [getCid(uint256)]");
 
         string memory cid2 = schemas.getCid("test2");
-        require(CandorStrings.isEqual(cid2, "test2Cid"), "cid mismatch [getCid(string)]");
+        require(CinderlinkStrings.isEqual(cid2, "test2Cid"), "cid mismatch [getCid(string)]");
 
         uint256 contributorId = schemas.getContributorId(schemaId);
         require(contributorId == 1, "contributorId mismatch [getContributorId(uint256)]");
@@ -51,10 +51,10 @@ contract EntityRegistryTest is Test {
         schemas.update(schemaId, "test3Updated", "test3CidUpdated");
 
         string memory name = schemas.getName(schemaId);
-        require(CandorStrings.isEqual(name, "test3Updated"), "name mismatch [getName(uint256)]");
+        require(CinderlinkStrings.isEqual(name, "test3Updated"), "name mismatch [getName(uint256)]");
 
         string memory cid = schemas.getCid(schemaId);
-        require(CandorStrings.isEqual(cid, "test3CidUpdated"), "cid mismatch [getCid(uint256)]");
+        require(CinderlinkStrings.isEqual(cid, "test3CidUpdated"), "cid mismatch [getCid(uint256)]");
     }
 
     function testRemove() public {

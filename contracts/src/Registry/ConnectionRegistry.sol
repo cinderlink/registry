@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/console.sol";
-import "../util/CandorStrings.sol";
-import "../util/CandorArrays.sol";
+import "../util/CinderlinkStrings.sol";
+import "../util/CinderlinkArrays.sol";
 import "./PermissionedContract.sol";
 import "./EntityRegistry.sol";
 import "./EntityDefinitionRegistry.sol";
@@ -93,7 +93,7 @@ contract ConnectionRegistry is PermissionedContract {
             uint256 connectionId = definitionConnections[_fromId].connectionIds[i];
             Connection memory connection = connections[connectionId];
             if (connection.toId == _toId) {
-                results = CandorArrays.push(results, connection.id);
+                results = CinderlinkArrays.push(results, connection.id);
             }
         }
         return results;
@@ -181,7 +181,7 @@ contract ConnectionRegistry is PermissionedContract {
         require(connectionId > 0, "Connection does not exist");
         uint256 contributorId = permissions.users().getId(msg.sender);
         delete connections[connectionId];
-        definitionConnections[_fromId].connectionIds = CandorArrays.remove(def.connectionIds, connectionId);
+        definitionConnections[_fromId].connectionIds = CinderlinkArrays.remove(def.connectionIds, connectionId);
         emit ConnectionDeleted(connectionId, _fromId, _toId, _type, contributorId);
 
         uint8 reverseConnectionType = _type == CONNECTION_TYPE_PARENT
@@ -190,7 +190,7 @@ contract ConnectionRegistry is PermissionedContract {
         Connection memory reverseEntity = getConnection(_toId, _fromId, reverseConnectionType);
         delete connections[reverseEntity.id];
         definitionConnections[_toId].connectionIds =
-            CandorArrays.remove(definitionConnections[_toId].connectionIds, reverseEntity.id);
+            CinderlinkArrays.remove(definitionConnections[_toId].connectionIds, reverseEntity.id);
         emit ConnectionDeleted(reverseEntity.id, _toId, _fromId, reverseConnectionType, contributorId);
     }
 
@@ -204,7 +204,7 @@ contract ConnectionRegistry is PermissionedContract {
             Connection memory connection = connections[matches[i]];
             if (connection.toId == _toId) {
                 delete connections[connection.id];
-                definitionConnections[_fromId].connectionIds = CandorArrays.remove(def.connectionIds, connection.id);
+                definitionConnections[_fromId].connectionIds = CinderlinkArrays.remove(def.connectionIds, connection.id);
             }
         }
     }
@@ -215,7 +215,7 @@ contract ConnectionRegistry is PermissionedContract {
         for (uint256 i = 0; i < entityDefinitionIds.length; i++) {
             uint256 definitionId = entityDefinitionIds[i];
             DefinitionConnections memory def = definitionConnections[definitionId];
-            connectionIds = CandorArrays.concat(connectionIds, def.connectionIds);
+            connectionIds = CinderlinkArrays.concat(connectionIds, def.connectionIds);
         }
 
         return connectionIds;
@@ -236,7 +236,7 @@ contract ConnectionRegistry is PermissionedContract {
         uint256[] memory result = new uint256[](0);
         for (uint256 i = 0; i < conns.length; i++) {
             if (conns[i].toId == _toEntityId) {
-                CandorArrays.push(result, conns[i].id);
+                CinderlinkArrays.push(result, conns[i].id);
             }
         }
         return result;

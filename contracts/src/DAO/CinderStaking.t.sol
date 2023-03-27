@@ -9,6 +9,8 @@ import "../Token/CinderToken.sol";
 contract CinderStakingTest is Test {
     CinderToken token;
     CinderStaking staking;
+    UserRegistry users;
+    PermissionRegistry permissions;
     address deployer;
     address delegate;
 
@@ -19,7 +21,9 @@ contract CinderStakingTest is Test {
         delegate = vm.addr(2);
         vm.startPrank(deployer);
         token = new CinderToken();
-        staking = new CinderStaking(address(token));
+        users = new UserRegistry();
+        permissions = new PermissionRegistry(address(users));
+        staking = new CinderStaking(address(token), address(permissions));
         token.mint(deployer, minStakeAmount * 10);
     }
 
