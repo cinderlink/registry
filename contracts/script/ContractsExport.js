@@ -34,7 +34,7 @@ fs.mkdirSync(`export/contracts`, { recursive: true });
         if (tx.contractName && tx.contractAddress) {
           const { abi } = JSON.parse(
             fs.readFileSync(
-              `./out/${tx.contractName}.sol/${tx.contractName}.json`,
+              `./out${tx.contractName==="CandorEarlyAccess"? "/NFT": ""}/${tx.contractName}.sol/${tx.contractName}.json`,
               "utf8"
             )
           );
